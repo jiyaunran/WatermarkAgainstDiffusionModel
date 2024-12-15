@@ -1,0 +1,137 @@
+# reconsrct freq
+python train.py --data_dir "/nfs/home/julian2001208/data/CelebA/seen/" \
+--image_resolution 64 \
+--noise_ratio 4 \
+--output_dir "./ratio_4_CelebA_bl4_jpg/" \
+--batch_size 256 \
+--num_epochs 20 \
+--block_length 4 \
+--jpg_noise \
+--mask_train_epoch 15 \
+--cuda 6
+
+python embed_fingerprints.py --data_dir "/nfs/home/julian2001208/data/CelebA/seen/" \
+--clean_data_dir "/nfs/home/julian2001208/data/CelebA/unseen/" \
+--batch_size 256 \
+--image_resolution 64 \
+--poison_data_num 11256 \
+--output_dir "/nfs/home/julian2001208/data/reconst_freq_pr4_pdn03_LSUN_BED/" \
+--noise_ratio 10 \
+--cuda 0
+python detect_fingerprints.py --data_dir "/nfs/home/julian2001208/data/reconst_freq_pr4_bl4_mix_pdn03_CelebA/generated_images/fulltrain50000/gen_img/" \
+--image_resolution 64  \
+--output_dir "./output/" \
+--decoder_path "./ratio_4_CelebA_bl4_maskbef_mix/checkpoints/" \
+--batch_size 256 \
+--block_length 4 \
+--mask2 \
+--mask_path ./ratio_4_CelebA_bl4_maskbef_mix/mask.npy \
+--thr 0.65 \
+--thr2 0.72 \
+--cuda 6
+
+python detect_fingerprints.py --data_dir "/nfs/home/julian2001208/data/reconst_freq_pr4_fullp_bl4_jpg_CelebA/fingerprinted_images/" \
+--image_resolution 64  \
+--output_dir "./output/" \
+--decoder_path "./ratio_4_CelebA_bl4_jpg/checkpoints/" \
+--batch_size 256 \
+--block_length 4 \
+--mask2 \
+--mask_path ./ratio_4_CelebA_bl4_jpg/mask.npy \
+--thr 0.625 \
+--thr2 0.69 \
+--cuda 5
+
+python gen_proper_cor.py --constraint_data_dir "/nfs/home/julian2001208/data/FFHQ/seen/" \
+--data_dir "/nfs/home/julian2001208/data/reconst_freq_pr10_bl4_FFHQ_mask/generated_images/fulltrain50000/gen_img/" \
+--batch_size 32 \
+--image_resolution 256 \
+--decoder_path "./ratio_10_FFHQ_bl4/checkpoints/" \
+--output_path "./ratio_10_FFHQ_bl4/checkpoints/pdn1/" \
+--cuda 1
+
+
+## FNN
+python embed_fingerprints2.py --data_dir "/nfs/home/julian2001208/data/data/FFHQ/seen/" \
+--clean_data_dir "/nfs/home/julian2001208/data/data/FFHQ/unseen/" \
+--output_dir "/nfs/home/julian2001208/data/data/FNN_pn03_FFHQ/" \
+--batch_size 128 \
+--poison_ratio 0.3 \
+--cuda 2
+
+python unpackage_npy.py --data_dir /nfs/home/julian2001208/data/data/FNN_pn03_FFHQ/ \
+--image_dir /nfs/home/julian2001208/data/data/FFHQ/seen/ \
+--batch_size 32
+
+python detect_fingerprints.py --data_dir "/nfs/home/julian2001208/data/data/FNN_pn01_FFHQ/generated_images/fulltrain50000/gen_img/" \
+--batch_size 16 --image_resolution 256 --cuda 3 --thr 0.5077 --thr2 0.512
+
+
+# Hidden
+python train.py --data_dir "/nfs/home/julian2001208/data/data/LSUN/seen/" \
+--image_resolution 256 \
+--budget 0.05 \
+--output_dir "./budget_005_LSUN/" \
+--batch_size 32 \
+--cuda 6
+
+python embed_fingerprints2.py --data_dir "/nfs/home/julian2001208/data/LSUN/seen/" \
+--clean_data_dir "/nfs/home/julian2001208/data/LSUN/seen/" \
+--batch_size 32 \
+--image_resolution 256 \
+--identical_fingerprints \
+--poison_data_num 99999999 \
+--output_dir "/nfs/home/julian2001208/data/hidden_pr005_fullp_LSUN/" \
+--encoder_path ./budget_005_LSUN/checkpoints/stegastamp_100_encoder.pth \
+--cuda 6
+
+python detect_fingerprints.py --data_dir /nfs/home/julian2001208/data/hidden_pr005_pdn01_LSUN/generated_images/fulltrain50000/gen_img/ \
+--image_resolution 256 \
+--output_dir "./output/" \
+--decoder_path "./budget_005_LSUN/checkpoints/stegastamp_100_decoder.pth" \
+--batch_size 32 \
+--thr 0.7 \
+--cuda 7
+
+## LISO
+python train_bits.py --bits 1 --dataset /nfs/home/julian2001208/data/data/CelebA/ \
+--save_dir /nfs/home/julian2001208/work/LISO/test_CelebA_2/
+
+python embed_fingerprints.py --eval --bits 1 --dataset /nfs/home/julian2001208/data/data/CelebA/seen/ \
+--load ./test/checkpoints/best.steg \
+--image_save_folder /nfs/home/julian2001208/data/data/LISO_pdn01_CelebA/ \
+--poison_ratio 0.1
+
+python detect_fingerprints.py --eval --bits 1 --dataset /nfs/home/julian2001208/data/data/LISO_pdn01_cifar10/generated_images/fulltrain50000/ \
+--load ./test_cifar10/checkpoints/best.steg
+
+## DDPM
+bash train.sh -d /nfs/home/julian2001208/data/reconst_freq_pr10_bl4_FFHQ_mask/fingerprinted_images/ -i 256 -b 3 -s 50000 \
+-v /nfs/home/julian2001208/data/reconst_freq_pr10_bl4_FFHQ_mask/DDPM/fulltrain50000/  -c 6
+
+
+bash sample.sh -m "/nfs/home/julian2001208/data/reconst_freq_pr4_bl4_mix_pdn01_CelebA/DDPM/fulltrain50000_jpg/ema_0.9999_050000.pt" \
+-i 64 -b 200 -n 3000 -o /nfs/home/julian2001208/data/reconst_freq_pr4_bl4_mix_pdn01_CelebA/generated_images/fulltrain50000_jpg/ -c 5
+
+python npz2png.py --input_path /nfs/home/julian2001208/data/clean_trained/generated_images/samples_3000x256x256x3.npz \
+--output_path /nfs/home/julian2001208/data/clean_trained/generated_images/gen_img/
+
+
+python npz2jpg.py --input_path /nfs/home/julian2001208/data/reconst_freq_pr3_bl4_pdn01_CelebA/generated_images/fulltrain50000_jpg/samples_3000x64x64x3.npz \
+--output_path /nfs/home/julian2001208/data/reconst_freq_pr3_bl4_pdn01_CelebA/generated_images/fulltrain50000_jpg/gen_img/
+
+# diffusion-GAN
+python train.py --outdir=training-runs \
+--data="/nfs/home/julian2001208/data/data/CelebA/seen.zip" --gpus=1 \
+--cfg auto --kimg 50000 --aug no --target 0.6 --noise_sd 0.05 --ts_dist priority
+
+bash train.sh
+
+bash sample.sh
+
+
+## evaluation
+python evaluate_image_loss.py --data_path1 /nfs/home/julian2001208/data/LSUN/seen/  \
+--data_path2 "/nfs/home/julian2001208/data/reconst_freq_pr10_fullp_LSUN_BED/fingerprinted_images/"  \
+--image_resolution 256	 \
+--cuda 0
