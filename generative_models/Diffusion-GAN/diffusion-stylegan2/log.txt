@@ -1,0 +1,139 @@
+
+Training options:
+{
+  "num_gpus": 2,
+  "image_snapshot_ticks": 50,
+  "network_snapshot_ticks": 50,
+  "metrics": [
+    "fid50k_full"
+  ],
+  "random_seed": 0,
+  "training_set_kwargs": {
+    "class_name": "training.dataset.ImageFolderDataset",
+    "path": "/nfs/home/julian2001208/data/data/CelebA/seen.zip",
+    "use_labels": false,
+    "max_size": 101298,
+    "xflip": true,
+    "resolution": 64
+  },
+  "data_loader_kwargs": {
+    "pin_memory": true,
+    "num_workers": 3,
+    "prefetch_factor": 2
+  },
+  "G_kwargs": {
+    "class_name": "training.networks.Generator",
+    "z_dim": 512,
+    "w_dim": 512,
+    "mapping_kwargs": {
+      "num_layers": 2
+    },
+    "synthesis_kwargs": {
+      "channel_base": 16384,
+      "channel_max": 512,
+      "num_fp16_res": 4,
+      "conv_clamp": 256
+    }
+  },
+  "D_kwargs": {
+    "class_name": "training.networks.Discriminator",
+    "block_kwargs": {},
+    "mapping_kwargs": {},
+    "epilogue_kwargs": {
+      "mbstd_group_size": 4
+    },
+    "channel_base": 16384,
+    "channel_max": 512,
+    "num_fp16_res": 4,
+    "conv_clamp": 256
+  },
+  "G_opt_kwargs": {
+    "class_name": "torch.optim.Adam",
+    "lr": 0.0025,
+    "betas": [
+      0,
+      0.99
+    ],
+    "eps": 1e-08
+  },
+  "D_opt_kwargs": {
+    "class_name": "torch.optim.Adam",
+    "lr": 0.0025,
+    "betas": [
+      0,
+      0.99
+    ],
+    "eps": 1e-08
+  },
+  "loss_kwargs": {
+    "class_name": "training.loss.StyleGAN2Loss",
+    "r1_gamma": 0.0128
+  },
+  "total_kimg": 50000,
+  "batch_size": 64,
+  "batch_gpu": 32,
+  "ema_kimg": 20.0,
+  "ema_rampup": 0.05,
+  "ada_target": 0.6,
+  "ada_kimg": 100,
+  "diffusion_kwargs": {
+    "class_name": "training.diffusion.Diffusion",
+    "beta_schedule": "linear",
+    "beta_start": 0.0001,
+    "beta_end": 0.02,
+    "t_min": 10,
+    "t_max": 1000,
+    "noise_std": 0.05,
+    "aug": "no",
+    "ada_maxp": 0.25,
+    "ts_dist": "priority"
+  },
+  "run_dir": "training-runs/00002-seen-mirror-auto2-target0.6-ada_kimg100-ts_dist-priority-image_augno-noise_sd0.05"
+}
+
+Output directory:   training-runs/00002-seen-mirror-auto2-target0.6-ada_kimg100-ts_dist-priority-image_augno-noise_sd0.05
+Training data:      /nfs/home/julian2001208/data/data/CelebA/seen.zip
+Training duration:  50000 kimg
+Number of GPUs:     2
+Number of images:   101298
+Image resolution:   64
+Conditional model:  False
+Dataset x-flips:    True
+
+Creating output directory...
+Launching processes...
+Traceback (most recent call last):
+  File "/nfs/home/julian2001208/work/Diffusion-GAN/diffusion-stylegan2/train.py", line 531, in <module>
+    main() # pylint: disable=no-value-for-parameter
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/click/core.py", line 1157, in __call__
+    return self.main(*args, **kwargs)
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/click/core.py", line 1078, in main
+    rv = self.invoke(ctx)
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/click/core.py", line 1434, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/click/core.py", line 783, in invoke
+    return __callback(*args, **kwargs)
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/click/decorators.py", line 33, in new_func
+    return f(get_current_context(), *args, **kwargs)
+  File "/nfs/home/julian2001208/work/Diffusion-GAN/diffusion-stylegan2/train.py", line 526, in main
+    torch.multiprocessing.spawn(fn=subprocess_fn, args=(args, temp_dir), nprocs=args.num_gpus)
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/torch/multiprocessing/spawn.py", line 240, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method='spawn')
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/torch/multiprocessing/spawn.py", line 198, in start_processes
+    while not context.join():
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/torch/multiprocessing/spawn.py", line 160, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 1 terminated with the following error:
+Traceback (most recent call last):
+  File "/nfs/home/julian2001208/anaconda3/envs/Diffusion-GAN/lib/python3.9/site-packages/torch/multiprocessing/spawn.py", line 69, in _wrap
+    fn(i, *args)
+  File "/nfs/home/julian2001208/work/Diffusion-GAN/diffusion-stylegan2/train.py", line 357, in subprocess_fn
+    training_loop.training_loop(rank=rank, **args)
+  File "/nfs/home/julian2001208/work/Diffusion-GAN/diffusion-stylegan2/training/training_loop.py", line 132, in training_loop
+    __CUR_NIMG__ = torch.tensor(0, dtype=torch.long, device=device)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+

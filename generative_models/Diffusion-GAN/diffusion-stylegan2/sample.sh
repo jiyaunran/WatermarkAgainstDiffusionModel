@@ -1,0 +1,2 @@
+export CUDA_VISIBLE_DEVICES=6
+python generate.py --outdir=reconst_freq_pdn03/gen_img/ --seeds=1-3000 --network=/nfs/home/julian2001208/work/Diffusion-GAN/diffusion-stylegan2/reconst_freq_pdn03/00000-fingerprinted-mirror-auto2-target0.6-ada_kimg100-ts_dist-priority-image_augno-noise_sd0.05/best_model.pkl
