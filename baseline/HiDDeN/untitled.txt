@@ -1,0 +1,3 @@
+0 encoder_decoder.pt 30000 poison samples
+1 Artificial_fingerprint 30000 poison samples
+2 Artificial_fingerprint 1000 poison samples
