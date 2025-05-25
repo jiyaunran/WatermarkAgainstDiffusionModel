@@ -1,4 +1,6 @@
-# FPW(Frequency-domain Pixel-by-Pixel Watermarking)
+# FPW: Feature-Preserving Watermarking for Generative Models
+**📄 [Paper (ICIP 2025)](./ICIP_LATEX_Template.pdf)**  
+
 This repo is the official code for [https://openreview.net/forum?id=4hSqhUhF20&noteId=4hSqhUhF20](https://openreview.net/forum?id=eEJvT5LDwa&noteId=eEJvT5LDwa)
 
 ## Dependencies and Installation
