@@ -12,24 +12,32 @@ Due to the page limitations of ICIP, some experimental results could not be incl
 
 ### Spatial Domain v.s. FFT
 We compare the watermark reproducibility and image distortion when embedding the watermark in the spatial domain versus the FFT domain. The experiment is conducted on the CelebA dataset, using two different watermark configurations with the same poisoning rate. The results are shown below:
+
 ![image](https://github.com/user-attachments/assets/bdcf78cb-5b45-4ee9-8b67-737b5495d07b)
 
 ### Robustness testing
 We evaluate the robustness of the watermark against common image processing augmentations. The applied transformations include:
 JPEG Compression (50% quality)
+
 *Gaussian Noise (σ = 25 / 255)
+
 *Gaussian Blur (2×2 kernel)
+
 *Color Jitter (brightness factor sampled from [0.8, 1.2])
 
 To investigate whether training with augmentations improves robustness, we introduce two variants:
+
 *FPW<sub>jpg</sub>: trained with JPEG-compressed images.
+
 *FPW<sub>mix</sub>: trained with all the augmentations applied with equal probability.
 
 All experiments are conducted on the CelebA dataset.
 The following results show the detection accuracy on watermarked images after augmentation:
+
 ![image](https://github.com/user-attachments/assets/65247aac-ede1-485b-85be-c094732e7e81)
 
 We also evaluate performance under a poison ratio of 0.3, to simulate a more challenging, low-signal regime:
+
 ![image](https://github.com/user-attachments/assets/120e00ed-b27c-4e79-bbe9-f98a0db18498)
 
 
