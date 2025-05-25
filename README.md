@@ -23,8 +23,8 @@ We evaluate the robustness of the watermark against common image processing augm
 - **Color Jitter** (brightness factor sampled from [0.8, 1.2])
 
 To investigate whether training with augmentations improves robustness, we introduce two variants:
-- **FPW<sub>jpg</sub> **: trained with JPEG-compressed images.
-- **FPW<sub>mix</sub> **: trained with all the augmentations applied with equal probability.
+- **FPW<sub>jpg</sub>**: trained with JPEG-compressed images.
+- **FPW<sub>mix</sub>**: trained with all the augmentations applied with equal probability.
 
 All experiments are conducted on the CelebA dataset.
 The following results show the detection accuracy on watermarked images after augmentation:
