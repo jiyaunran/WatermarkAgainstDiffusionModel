@@ -17,13 +17,10 @@ We compare the watermark reproducibility and image distortion when embedding the
 
 ### Robustness testing
 We evaluate the robustness of the watermark against common image processing augmentations. The applied transformations include:
-JPEG Compression (50% quality)
-
-*Gaussian Noise (σ = 25 / 255)
-
-*Gaussian Blur (2×2 kernel)
-
-*Color Jitter (brightness factor sampled from [0.8, 1.2])
+- **JPEG Compression** (50% quality)
+- **Gaussian Noise** (σ = 25 / 255)
+- **Gaussian Blur** (2×2 kernel)
+- **Color Jitter** (brightness factor sampled from [0.8, 1.2])
 
 To investigate whether training with augmentations improves robustness, we introduce two variants:
 
